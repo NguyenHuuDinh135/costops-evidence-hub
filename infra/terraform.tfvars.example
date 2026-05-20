@@ -1,0 +1,7 @@
+aws_region   = "ap-southeast-1"
+app_name     = "CostOpsEvidenceHub"
+environment  = "dev"
+cost_center  = "G7"
+owner_email  = "you@example.com"
+github_owner = "your-github-username"
+github_repo  = "costops-evidence-hub"

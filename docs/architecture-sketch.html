@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CostOps Evidence Hub - Architecture Sketch</title>
+  <style>
+    :root { color-scheme: dark; }
+    body { margin: 0; background: #020617; color: #e2e8f0; font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 32px 24px; }
+    .header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    .dot { width: 10px; height: 10px; border-radius: 999px; background: #34d399; box-shadow: 0 0 20px #34d399; }
+    h1 { font-size: 24px; margin: 0; }
+    p { margin: 6px 0 0; color: #94a3b8; font-size: 13px; }
+    .card { border: 1px solid #1e293b; border-radius: 18px; background: rgba(15, 23, 42, .72); overflow: hidden; }
+    svg { display: block; width: 100%; height: auto; }
+    .label { font-size: 13px; fill: #f8fafc; font-weight: 700; }
+    .sub { font-size: 9px; fill: #cbd5e1; }
+    .tiny { font-size: 8px; fill: #94a3b8; }
+    .note { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 16px; }
+    .note > div { border: 1px solid #1e293b; border-radius: 14px; padding: 14px; background: rgba(15, 23, 42, .62); }
+    .note h3 { margin: 0 0 8px; font-size: 13px; }
+    .note ul { margin: 0; padding-left: 16px; color: #cbd5e1; font-size: 11px; line-height: 1.65; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div class="dot"></div>
+      <div>
+        <h1>CostOps Evidence Hub - Sketch kiến trúc</h1>
+        <p>Terraform chạy local. GitHub Actions chỉ CI/CD code bằng OIDC. Không dùng CloudFront.</p>
+      </div>
+    </div>
+    <div class="card">
+      <svg viewBox="0 0 1180 720" role="img" aria-label="CostOps Evidence Hub architecture without CloudFront">
+        <defs>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.5"/>
+          </pattern>
+          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+          </marker>
+          <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#34d399"/>
+          </marker>
+          <marker id="arrowAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#fbbf24"/>
+          </marker>
+        </defs>
+        <rect width="1180" height="720" fill="#020617"/>
+        <rect width="1180" height="720" fill="url(#grid)" opacity=".75"/>
+
+        <rect x="390" y="90" width="720" height="520" rx="16" fill="rgba(120,53,15,.12)" stroke="#fbbf24" stroke-dasharray="8 5"/>
+        <text x="410" y="118" class="tiny">AWS account / ap-southeast-1</text>
+
+        <line x1="160" y1="190" x2="390" y2="190" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+        <text x="220" y="174" class="tiny">HTTP S3 website</text>
+        <line x1="160" y1="300" x2="390" y2="300" stroke="#34d399" stroke-width="2" marker-end="url(#arrowGreen)"/>
+        <text x="218" y="284" class="tiny">HTTPS API calls</text>
+        <line x1="160" y1="465" x2="390" y2="465" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrowAmber)"/>
+        <text x="190" y="449" class="tiny">terraform apply local</text>
+        <line x1="230" y1="555" x2="445" y2="555" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrowAmber)"/>
+        <text x="250" y="538" class="tiny">GitHub OIDC assume role</text>
+
+        <rect x="40" y="155" width="120" height="70" rx="8" fill="#0f172a"/>
+        <rect x="40" y="155" width="120" height="70" rx="8" fill="rgba(30,41,59,.5)" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="70" y="188" class="label">User</text>
+        <text x="58" y="205" class="sub">browser demo</text>
+
+        <rect x="40" y="425" width="120" height="80" rx="8" fill="#0f172a"/>
+        <rect x="40" y="425" width="120" height="80" rx="8" fill="rgba(30,41,59,.5)" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="62" y="458" class="label">Local PC</text>
+        <text x="54" y="477" class="sub">Terraform state</text>
+        <text x="54" y="491" class="sub">AWS profile local</text>
+
+        <rect x="40" y="525" width="190" height="80" rx="8" fill="#0f172a"/>
+        <rect x="40" y="525" width="190" height="80" rx="8" fill="rgba(30,41,59,.5)" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="62" y="558" class="label">GitHub Actions</text>
+        <text x="58" y="577" class="sub">build web + lambda zips</text>
+        <text x="58" y="591" class="sub">no terraform apply</text>
+
+        <rect x="420" y="150" width="210" height="95" rx="8" fill="#0f172a"/>
+        <rect x="420" y="150" width="210" height="95" rx="8" fill="rgba(8,51,68,.4)" stroke="#22d3ee" stroke-width="1.5"/>
+        <text x="470" y="185" class="label">S3 Website</text>
+        <text x="450" y="205" class="sub">static TanStack Start output</text>
+        <text x="450" y="221" class="sub">public read bucket policy</text>
+
+        <rect x="420" y="265" width="210" height="95" rx="8" fill="#0f172a"/>
+        <rect x="420" y="265" width="210" height="95" rx="8" fill="rgba(6,78,59,.4)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="462" y="300" class="label">API Gateway</text>
+        <text x="470" y="320" class="sub">HTTP API</text>
+        <text x="450" y="336" class="sub">CORS for frontend</text>
+
+        <line x1="630" y1="312" x2="710" y2="312" stroke="#34d399" stroke-width="2" marker-end="url(#arrowGreen)"/>
+        <rect x="710" y="265" width="210" height="95" rx="8" fill="#0f172a"/>
+        <rect x="710" y="265" width="210" height="95" rx="8" fill="rgba(6,78,59,.4)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="760" y="300" class="label">API Lambda</text>
+        <text x="752" y="320" class="sub">Hono backend API</text>
+        <text x="744" y="336" class="sub">/health /cost /tags</text>
+
+        <rect x="710" y="390" width="210" height="80" rx="8" fill="#0f172a"/>
+        <rect x="710" y="390" width="210" height="80" rx="8" fill="rgba(251,146,60,.3)" stroke="#fb923c" stroke-width="1.5"/>
+        <text x="748" y="424" class="label">EventBridge</text>
+        <text x="746" y="444" class="sub">daily/hourly schedules</text>
+
+        <line x1="815" y1="470" x2="815" y2="515" stroke="#fb923c" stroke-width="2" marker-end="url(#arrowAmber)"/>
+        <rect x="650" y="515" width="160" height="70" rx="8" fill="#0f172a"/>
+        <rect x="650" y="515" width="160" height="70" rx="8" fill="rgba(6,78,59,.4)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="678" y="548" class="label">Cost Guard</text>
+        <text x="675" y="566" class="sub">stop untagged EC2</text>
+
+        <rect x="840" y="515" width="180" height="70" rx="8" fill="#0f172a"/>
+        <rect x="840" y="515" width="180" height="70" rx="8" fill="rgba(136,19,55,.4)" stroke="#fb7185" stroke-width="1.5"/>
+        <text x="872" y="548" class="label">Security Guard</text>
+        <text x="862" y="566" class="sub">fix SSH/RDP exposure</text>
+
+        <rect x="420" y="525" width="190" height="70" rx="8" fill="#0f172a"/>
+        <rect x="420" y="525" width="190" height="70" rx="8" fill="rgba(120,53,15,.3)" stroke="#fbbf24" stroke-width="1.5"/>
+        <text x="465" y="557" class="label">IAM OIDC Role</text>
+        <text x="445" y="576" class="sub">short-lived GitHub deploy</text>
+
+        <line x1="610" y1="555" x2="650" y2="555" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrowAmber)"/>
+        <line x1="610" y1="555" x2="420" y2="198" stroke="#fbbf24" stroke-dasharray="5 5" stroke-width="1.6" marker-end="url(#arrowAmber)"/>
+        <line x1="610" y1="555" x2="710" y2="312" stroke="#fbbf24" stroke-dasharray="5 5" stroke-width="1.6" marker-end="url(#arrowAmber)"/>
+
+        <rect x="955" y="265" width="125" height="95" rx="8" fill="#0f172a"/>
+        <rect x="955" y="265" width="125" height="95" rx="8" fill="rgba(76,29,149,.4)" stroke="#a78bfa" stroke-width="1.5"/>
+        <text x="980" y="300" class="label">Logs</text>
+        <text x="978" y="320" class="sub">CloudWatch</text>
+        <text x="972" y="336" class="sub">dashboard/alarm</text>
+        <line x1="920" y1="312" x2="955" y2="312" stroke="#a78bfa" stroke-width="2" marker-end="url(#arrow)"/>
+
+        <rect x="470" y="635" width="250" height="36" rx="18" fill="rgba(15,23,42,.9)" stroke="#334155"/>
+        <circle cx="495" cy="653" r="5" fill="#22d3ee"/><text x="508" y="657" class="tiny">Frontend</text>
+        <circle cx="575" cy="653" r="5" fill="#34d399"/><text x="588" y="657" class="tiny">Backend</text>
+        <circle cx="655" cy="653" r="5" fill="#fbbf24"/><text x="668" y="657" class="tiny">CI/IaC</text>
+      </svg>
+    </div>
+    <div class="note">
+      <div><h3>Local Terraform</h3><ul><li>Provision S3 Website, API Gateway, Lambda, Budget, EventBridge, IAM OIDC.</li><li>State/credentials ở local, không chạy terraform apply trên GitHub.</li></ul></div>
+      <div><h3>GitHub CI/CD</h3><ul><li>Assume role qua OIDC.</li><li>Upload frontend lên S3 và update Lambda code packages.</li></ul></div>
+      <div><h3>No CloudFront</h3><ul><li>Frontend dùng S3 Static Website endpoint.</li><li>Lưu ý: S3 website endpoint là HTTP/public-read, phù hợp lab/demo không chứa dữ liệu nhạy cảm.</li></ul></div>
+    </div>
+  </div>
+</body>
+</html>
