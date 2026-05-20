@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "vite dev --port 3000",
-    "build": "vite build",
+    "build": "vite build && node scripts/write-static-index.mjs",
     "preview": "vite preview",
     "lint": "eslint src",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
